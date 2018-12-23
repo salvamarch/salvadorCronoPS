@@ -12,7 +12,9 @@ public class MainActivity extends AppCompatActivity {
 TextView ini, det, tot;
 Button inicio, parar, reset, fin;
 MiCronometro cronometro= null;
+MiCronometro2 cronometro2= null;
 Boolean activo=true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +51,17 @@ Boolean activo=true;
             @Override
             public void onClick(View v) {
                 //Detenemos el hilo
-                parar.setText("Reanudar");
                 if (cronometro!=null) {
                     cronometro.parar();
+                    parar.setText("Reanudar");
+                }else{
+                    parar.setText("Parar");
+                }
+                if (cronometro2==null) {
+                    cronometro2 = new MiCronometro2();
+                    cronometro2.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }else{
+                    activo=true;
                 }
             }
         });
@@ -107,6 +117,38 @@ Boolean activo=true;
             super.onProgressUpdate(values);
             int segundos = Integer.parseInt(values[0]);
             ini.setText(""+ (segundos/60)+":" +(segundos%60));
+            tot.setText(""+ (segundos/60)+":" +(segundos%60));
+        }
+
+        public void parar(){
+            activo = !activo;
+        }
+    }
+
+    private class MiCronometro2 extends AsyncTask<String, String, String> {
+        int contador = 0;
+        boolean activo = true;
+        @Override
+        protected String doInBackground(String... strings) {
+
+            while (true) {
+                while (activo) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    contador++;
+                    publishProgress("" + contador);
+                }
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            int segundos = Integer.parseInt(values[0]);
+            det.setText(""+ (segundos/60)+":" +(segundos%60));
             tot.setText(""+ (segundos/60)+":" +(segundos%60));
         }
 
