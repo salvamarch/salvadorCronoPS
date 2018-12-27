@@ -63,6 +63,14 @@ Boolean activo=true;
                 }else{
                     activo=true;
                 }
+                parar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(cronometro2!=null){
+                            cronometro2.parar();
+                        }
+                    }
+                });
             }
         });
 
@@ -149,7 +157,6 @@ Boolean activo=true;
             super.onProgressUpdate(values);
             int segundos = Integer.parseInt(values[0]);
             det.setText(""+ (segundos/60)+":" +(segundos%60));
-            tot.setText(""+ (segundos/60)+":" +(segundos%60));
         }
 
         public void parar(){
